@@ -5,15 +5,16 @@ authors = ["Jacek Bilski <jacek@bilski.tech>"]
 edition = "2018"
 
 [lib]
-crate-type = ["cdylib", "rlib"]
+crate-type = ["cdylib"]
 
 [features]
 default = ["console_error_panic_hook"]
 
 [dependencies]
-wasm-bindgen = "0.2"
+wasm-bindgen = "0.2.62"
+js-sys = "0.3.39"
+web-sys = {version = "0.3.39", features = ['Document', 'Element', 'HtmlCanvasElement', 'WebGlBuffer', 'WebGlRenderingContext', 'WebGlProgram', 'WebGlShader', 'Window']}
 console_error_panic_hook = { version = "0.1.6", optional = true }
-wee_alloc = { version = "0.4.2", optional = true }
 
 [profile.release]
 opt-level = "s"
