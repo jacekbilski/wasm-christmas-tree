@@ -11,6 +11,7 @@ module.exports = {
   },
   mode: "development",
   plugins: [
+    new CopyWebpackPlugin(['style.css']),
     new HtmlWebpackPlugin({
       template: 'index.html'
     }),
