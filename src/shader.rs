@@ -1,11 +1,11 @@
-use web_sys::{WebGlProgram, WebGlRenderingContext};
+use web_sys::{WebGl2RenderingContext, WebGlProgram};
 
 pub struct Shader {
     pub program: WebGlProgram,
 }
 
 impl Shader {
-    pub fn new(context: &WebGlRenderingContext) -> Shader {
+    pub fn new(context: &WebGl2RenderingContext) -> Shader {
         let program = context
             .create_program()
             .expect("Cannot create program");
@@ -15,7 +15,7 @@ impl Shader {
         context.link_program(&shader.program);
 
         let success = context
-            .get_program_parameter(&shader.program, WebGlRenderingContext::LINK_STATUS)
+            .get_program_parameter(&shader.program, WebGl2RenderingContext::LINK_STATUS)
             .as_bool()
             .expect("Kaboom, Cannot cast linking result status to boolean");
         if !success {
@@ -27,7 +27,7 @@ impl Shader {
         shader
     }
 
-    fn add_vertex_shader(&self, context: &WebGlRenderingContext) {
+    fn add_vertex_shader(&self, context: &WebGl2RenderingContext) {
         let shader_source = r#"
         attribute vec4 position;
         void main() {
@@ -35,12 +35,12 @@ impl Shader {
         }
     "#;
         let shader = context
-            .create_shader(WebGlRenderingContext::VERTEX_SHADER)
+            .create_shader(WebGl2RenderingContext::VERTEX_SHADER)
             .expect("Unable to create vertex shader");
         context.shader_source(&shader, shader_source);
         context.compile_shader(&shader);
         let success = context
-            .get_shader_parameter(&shader, WebGlRenderingContext::COMPILE_STATUS)
+            .get_shader_parameter(&shader, WebGl2RenderingContext::COMPILE_STATUS)
             .as_bool()
             .expect("Kaboom, Cannot cast compilation result status to boolean");
         if !success {
@@ -51,19 +51,19 @@ impl Shader {
         context.attach_shader(&self.program, &shader);
     }
 
-    fn add_fragment_shader(&self, context: &WebGlRenderingContext) {
+    fn add_fragment_shader(&self, context: &WebGl2RenderingContext) {
         let shader_source = r#"
         void main() {
             gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
         }
     "#;
         let shader = context
-            .create_shader(WebGlRenderingContext::FRAGMENT_SHADER)
+            .create_shader(WebGl2RenderingContext::FRAGMENT_SHADER)
             .expect("Unable to create fragment shader");
         context.shader_source(&shader, shader_source);
         context.compile_shader(&shader);
         let success = context
-            .get_shader_parameter(&shader, WebGlRenderingContext::COMPILE_STATUS)
+            .get_shader_parameter(&shader, WebGl2RenderingContext::COMPILE_STATUS)
             .as_bool()
             .expect("Kaboom, Cannot cast compilation result status to boolean");
         if !success {
