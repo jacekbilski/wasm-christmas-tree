@@ -3,31 +3,33 @@ use wasm_bindgen::prelude::*;
 use web_sys::WebGl2RenderingContext;
 
 use crate::shader::Shader;
+use crate::xmas_tree::scene::Scene;
 
 mod shader;
 mod triangle;
 mod utils;
+mod xmas_tree;
 
 #[wasm_bindgen(start)]
 pub fn start() -> Result<(), JsValue> {
-    let document = web_sys::window().unwrap().document().unwrap();
-    let canvas = document.get_element_by_id("canvas").unwrap();
-    let canvas: web_sys::HtmlCanvasElement = canvas.dyn_into::<web_sys::HtmlCanvasElement>()?;
-
-    let context = canvas
-        .get_context("webgl2")?
-        .unwrap()
-        .dyn_into::<WebGl2RenderingContext>()?;
-
+    let context = get_context();
     context.enable(WebGl2RenderingContext::DEPTH_TEST);
 
-    let shader = Shader::new(&context);
-    context.use_program(Some(&shader.program));
-
-    context.clear_color(0.0, 0.0, 0.0, 1.0);
-    context.clear(WebGl2RenderingContext::COLOR_BUFFER_BIT | WebGl2RenderingContext::DEPTH_BUFFER_BIT);
-
-    triangle::draw_triangle(&context);
+    let mut scene = Scene::setup(&context);
+    scene.draw(&context);
 
     Ok(())
+}
+
+fn get_context() -> WebGl2RenderingContext {
+    let document = web_sys::window().unwrap().document().unwrap();
+    let canvas = document.get_element_by_id("canvas").unwrap();
+    let canvas: web_sys::HtmlCanvasElement = canvas.dyn_into::<web_sys::HtmlCanvasElement>().expect("Counldn't find canvas element");
+
+    canvas
+        .get_context("webgl2")
+        .expect("Error getting WebGL2 Rendering Context")
+        .unwrap()
+        .dyn_into::<WebGl2RenderingContext>()
+        .expect("Error casting")
 }
