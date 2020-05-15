@@ -1,4 +1,5 @@
 use web_sys::{WebGl2RenderingContext, WebGlProgram};
+use web_sys::console;
 
 pub struct Shader {
     pub program: WebGlProgram,
@@ -28,12 +29,13 @@ impl Shader {
     }
 
     fn add_vertex_shader(&self, context: &WebGl2RenderingContext) {
-        let shader_source = r#"
-        attribute vec4 position;
-        void main() {
-            gl_Position = position;
-        }
-    "#;
+        let shader_source = r#"#version 300 es
+            precision highp float;
+            in vec4 position;
+            void main() {
+                gl_Position = position;
+            }
+        "#;
         let shader = context
             .create_shader(WebGl2RenderingContext::VERTEX_SHADER)
             .expect("Unable to create vertex shader");
@@ -46,17 +48,21 @@ impl Shader {
         if !success {
             let message = context.get_shader_info_log(&shader)
                 .expect("Cannot get info log");
-            panic!(message);
+            console::log_2(&"Houston, problem with vertex shader: ".into(), &message.into());
+            panic!();
         }
         context.attach_shader(&self.program, &shader);
     }
 
     fn add_fragment_shader(&self, context: &WebGl2RenderingContext) {
-        let shader_source = r#"
-        void main() {
-            gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-        }
-    "#;
+        let shader_source = r#"#version 300 es
+            precision highp float;
+            out vec4 FragColor;
+
+            void main() {
+                FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+            }
+        "#;
         let shader = context
             .create_shader(WebGl2RenderingContext::FRAGMENT_SHADER)
             .expect("Unable to create fragment shader");
@@ -69,7 +75,8 @@ impl Shader {
         if !success {
             let message = context.get_shader_info_log(&shader)
                 .expect("Cannot get info log");
-            panic!(message);
+            console::log_2(&"Houston, problem with fragment shader: ".into(), &message.into());
+            panic!();
         }
         context.attach_shader(&self.program, &shader);
     }

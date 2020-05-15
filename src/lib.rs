@@ -1,3 +1,7 @@
+extern crate console_error_panic_hook;
+
+use std::panic;
+
 use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
 use web_sys::WebGl2RenderingContext;
@@ -12,6 +16,8 @@ mod xmas_tree;
 
 #[wasm_bindgen(start)]
 pub fn start() -> Result<(), JsValue> {
+    panic::set_hook(Box::new(console_error_panic_hook::hook));
+
     let context = get_context();
     context.enable(WebGl2RenderingContext::DEPTH_TEST);
 

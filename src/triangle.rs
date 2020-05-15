@@ -1,7 +1,11 @@
 use web_sys::WebGl2RenderingContext;
 
 pub fn draw_triangle(context: &WebGl2RenderingContext) {
-    let vertices: [f32; 9] = [-0.7, -0.7, 0.0, 0.7, -0.7, 0.0, 0.0, 0.7, 0.0];
+    let vertices: [f32; 9] = [
+        -0.7, -0.7, 0.0,
+        0.7, -0.7, 0.0,
+        0.0, 0.7, 0.0,
+    ];
 
     let buffer = context
         .create_buffer()
