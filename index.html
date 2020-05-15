@@ -1,9 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>Hello wasm-pack!</title>
     <link rel="stylesheet" href="style.css">
+    <script type="module">
+        import init from './pkg/wasm_christmas_tree.js';
+
+        async function run() {
+            await init();
+        }
+
+        run();
+    </script>
 </head>
 <body>
 <canvas id="canvas" width="1600" height="900"></canvas>
