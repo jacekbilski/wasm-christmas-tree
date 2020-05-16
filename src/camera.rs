@@ -14,7 +14,7 @@ pub struct Camera {
 }
 
 impl Camera {
-    pub fn new(position: SphericalPoint3<f32>, look_at: Point3<f32>, gl: &GL) -> Self {
+    pub fn new(gl: &GL, position: SphericalPoint3<f32>, look_at: Point3<f32>) -> Self {
         let (window_width, window_height) = (gl.drawing_buffer_width(), gl.drawing_buffer_height());
         let ubo = Camera::setup_camera_ubo(&gl);
         let camera = Camera { position, look_at, ubo, window_width: window_width as f32, window_height: window_height as f32 };

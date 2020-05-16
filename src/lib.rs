@@ -11,8 +11,8 @@ use crate::xmas_tree::scene::Scene;
 mod camera;
 mod coords;
 mod mesh;
+mod model;
 mod shader;
-mod triangle;
 mod xmas_tree;
 
 #[wasm_bindgen(start)]

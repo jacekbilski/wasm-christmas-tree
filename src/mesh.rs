@@ -14,9 +14,8 @@ pub struct Vertex {
 
 impl Vertex {
     pub fn size() -> usize {
-        // let float_size = mem::size_of::<GLfloat>();
-        // 2 * 3 * float_size
-        4 * 3
+        let float_size = 4; //mem::size_of::<GLfloat>();
+        2 * 3 * float_size
     }
 
     pub fn as_vec(&self) -> Vec<f32> {
