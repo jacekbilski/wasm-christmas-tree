@@ -1,16 +1,28 @@
 use web_sys::{WebGl2RenderingContext, WebGlProgram};
 use web_sys::console;
 
+pub const CAMERA_UBO_BINDING_POINT: u32 = 0;
+
 const VERTEX_SHADER: &str = r#"#version 300 es
 precision highp float;
-in vec4 position;
+
+layout (location = 0) in vec3 aPos;
+
+layout (std140) uniform Camera {
+    vec3 cameraPosition;
+    mat4 view;
+    mat4 projection;
+};
+
 void main() {
-    gl_Position = position;
+    vec4 pos = vec4(aPos, 1.0);
+    gl_Position = projection * view * pos;
 }
 "#;
 
 const FRAGMENT_SHADER: &str = r#"#version 300 es
 precision highp float;
+
 out vec4 FragColor;
 
 void main() {

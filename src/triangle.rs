@@ -1,16 +1,16 @@
-use web_sys::WebGl2RenderingContext;
+use web_sys::WebGl2RenderingContext as GL;
 
-pub fn draw_triangle(context: &WebGl2RenderingContext) {
+pub fn draw_triangle(gl: &GL) {
     let vertices: [f32; 9] = [
         -0.7, -0.7, 0.0,
         0.7, -0.7, 0.0,
         0.0, 0.7, 0.0,
     ];
 
-    let buffer = context
+    let buffer = gl
         .create_buffer()
         .expect("failed to create buffer");
-    context.bind_buffer(WebGl2RenderingContext::ARRAY_BUFFER, Some(&buffer));
+    gl.bind_buffer(GL::ARRAY_BUFFER, Some(&buffer));
 
     // Note that `Float32Array::view` is somewhat dangerous (hence the
     // `unsafe`!). This is creating a raw view into our module's
@@ -23,18 +23,18 @@ pub fn draw_triangle(context: &WebGl2RenderingContext) {
     unsafe {
         let vert_array = js_sys::Float32Array::view(&vertices);
 
-        context.buffer_data_with_array_buffer_view(
-            WebGl2RenderingContext::ARRAY_BUFFER,
+        gl.buffer_data_with_array_buffer_view(
+            GL::ARRAY_BUFFER,
             &vert_array,
-            WebGl2RenderingContext::STATIC_DRAW,
+            GL::STATIC_DRAW,
         );
     }
 
-    context.vertex_attrib_pointer_with_i32(0, 3, WebGl2RenderingContext::FLOAT, false, 0, 0);
-    context.enable_vertex_attrib_array(0);
+    gl.vertex_attrib_pointer_with_i32(0, 3, GL::FLOAT, false, 0, 0);
+    gl.enable_vertex_attrib_array(0);
 
-    context.draw_arrays(
-        WebGl2RenderingContext::TRIANGLES,
+    gl.draw_arrays(
+        GL::TRIANGLES,
         0,
         (vertices.len() / 3) as i32,
     );

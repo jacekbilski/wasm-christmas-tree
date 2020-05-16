@@ -6,9 +6,10 @@ use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
 use web_sys::WebGl2RenderingContext;
 
-use crate::shader::Shader;
 use crate::xmas_tree::scene::Scene;
 
+mod camera;
+mod coords;
 mod shader;
 mod triangle;
 mod utils;
