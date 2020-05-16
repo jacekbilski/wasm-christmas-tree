@@ -7,6 +7,7 @@ use crate::lights::Lights;
 use crate::material::Materials;
 use crate::model::Model;
 use crate::shader::Shader;
+use crate::xmas_tree::baubles::Baubles;
 use crate::xmas_tree::ground::Ground;
 
 pub struct Scene {
@@ -34,7 +35,7 @@ impl Scene {
         let mut models: Vec<Box<dyn Model>> = Vec::new();
         models.push(Box::new(Ground::new(gl, materials)));
         // models.push(Box::new(Tree::new(materials)));
-        // models.push(Box::new(Baubles::new(materials)));
+        models.push(Box::new(Baubles::new(gl, materials)));
         // models.push(Box::new(Snow::new(materials)));
         models
     }
