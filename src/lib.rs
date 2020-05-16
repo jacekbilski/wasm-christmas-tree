@@ -10,6 +10,7 @@ use crate::xmas_tree::scene::Scene;
 
 mod camera;
 mod coords;
+mod mesh;
 mod shader;
 mod triangle;
 mod xmas_tree;
