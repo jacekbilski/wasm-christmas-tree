@@ -3,6 +3,7 @@ use web_sys::console;
 
 pub const CAMERA_UBO_BINDING_POINT: u32 = 0;
 pub const LIGHTS_UBO_BINDING_POINT: u32 = 1;
+pub const MATERIALS_UBO_BINDING_POINT: u32 = 2;
 
 const VERTEX_SHADER: &str = r#"#version 300 es
 precision highp float;
@@ -33,6 +34,12 @@ struct Light {
     vec3 specular;
 };
 
+struct Material {
+    vec3 ambient;
+    vec3 diffuse;
+    vec4 specular;
+};
+
 layout (std140) uniform Camera {
     vec3 cameraPosition;
     mat4 view;
@@ -42,6 +49,10 @@ layout (std140) uniform Camera {
 layout (std140) uniform Lights {
     int lightsNo;
     Light light[4];
+};
+
+layout (std140) uniform Materials {
+    Material material[100];
 };
 
 out vec4 FragColor;
@@ -77,6 +88,7 @@ impl Shader {
 
         shader.bind_camera_ubo(gl);
         shader.bind_lights_ubo(gl);
+        shader.bind_materials_ubo(gl);
 
         shader
     }
@@ -127,5 +139,10 @@ impl Shader {
     fn bind_lights_ubo(&self, gl: &GL) {
         let uniform_block_index = gl.get_uniform_block_index(&self.program, "Lights");
         gl.uniform_block_binding(&self.program, uniform_block_index, LIGHTS_UBO_BINDING_POINT);
+    }
+
+    fn bind_materials_ubo(&self, gl: &GL) {
+        let uniform_block_index = gl.get_uniform_block_index(&self.program, "Materials");
+        gl.uniform_block_binding(&self.program, uniform_block_index, MATERIALS_UBO_BINDING_POINT);
     }
 }

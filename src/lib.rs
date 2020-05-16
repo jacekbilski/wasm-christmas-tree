@@ -11,6 +11,7 @@ use crate::xmas_tree::scene::Scene;
 mod camera;
 mod coords;
 mod lights;
+mod material;
 mod mesh;
 mod model;
 mod shader;

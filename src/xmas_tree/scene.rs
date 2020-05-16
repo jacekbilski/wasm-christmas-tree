@@ -4,12 +4,14 @@ use web_sys::WebGl2RenderingContext as GL;
 use crate::camera::Camera;
 use crate::coords::SphericalPoint3;
 use crate::lights::Lights;
+use crate::material::Materials;
 use crate::model::Model;
 use crate::shader::Shader;
 use crate::xmas_tree::ground::Ground;
 
 pub struct Scene {
     pub camera: Camera,
+    lights: Lights,
     shader: Shader,
     models: Vec<Box<dyn Model>>,
 }
@@ -23,9 +25,18 @@ impl Scene {
 
         let shader = Shader::new(gl);
 
+        let mut materials = Materials::setup(gl);
+        let models = Scene::add_models(gl, &mut materials);
+        Scene { camera, lights, shader, models }
+    }
+
+    fn add_models(gl: &GL, materials: &mut Materials) -> Vec<Box<dyn Model>> {
         let mut models: Vec<Box<dyn Model>> = Vec::new();
-        models.push(Box::new(Ground::new(gl)));
-        Scene { camera, shader, models }
+        models.push(Box::new(Ground::new(gl, materials)));
+        // models.push(Box::new(Tree::new(materials)));
+        // models.push(Box::new(Baubles::new(materials)));
+        // models.push(Box::new(Snow::new(materials)));
+        models
     }
 
     pub fn draw(&mut self, gl: &GL) {
