@@ -3,7 +3,7 @@ use web_sys::WebGl2RenderingContext as GL;
 
 use crate::material::{Material, Materials};
 use crate::mesh::{Mesh, Vertex};
-use crate::model::Model;
+use crate::model::{Instance, Model};
 use crate::shader::Shader;
 
 pub struct Ground {
@@ -32,7 +32,7 @@ impl Ground {
         let material_id = materials.add(gl, material);
 
         let mesh = Mesh::new(gl, vertices, indices, 1);
-        // mesh.fill_instances_vbo(&vec![Instance { model: Matrix4::identity(), material_id }]);
+        mesh.fill_instances_vbo(gl, &vec![Instance { model: Matrix4::identity(), material_id }]);
         Self { mesh }
     }
 }
