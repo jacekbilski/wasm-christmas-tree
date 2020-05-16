@@ -12,7 +12,6 @@ mod camera;
 mod coords;
 mod shader;
 mod triangle;
-mod utils;
 mod xmas_tree;
 
 #[wasm_bindgen(start)]
