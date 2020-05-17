@@ -2,6 +2,8 @@ extern crate console_error_panic_hook;
 
 use std::panic;
 
+use wasm_bindgen::__rt::core::cell::RefCell;
+use wasm_bindgen::__rt::std::rc::Rc;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
 use web_sys::WebGl2RenderingContext as GL;
@@ -17,6 +19,16 @@ mod model;
 mod shader;
 mod xmas_tree;
 
+fn window() -> web_sys::Window {
+    web_sys::window().expect("no global `window` exists")
+}
+
+fn request_animation_frame(f: &Closure<dyn FnMut()>) {
+    window()
+        .request_animation_frame(f.as_ref().unchecked_ref())
+        .expect("should register `requestAnimationFrame` OK");
+}
+
 #[wasm_bindgen(start)]
 pub fn start() -> Result<(), JsValue> {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
@@ -25,8 +37,18 @@ pub fn start() -> Result<(), JsValue> {
     gl.enable(GL::DEPTH_TEST);
 
     let mut scene = Scene::setup(&gl);
-    scene.draw(&gl);
 
+    let render_loop = Rc::new(RefCell::new(None));
+    let render_loop_2 = render_loop.clone();
+    *render_loop_2.borrow_mut() = Some(Closure::wrap(Box::new(move || {
+        scene.next_frame(&gl);
+        scene.draw(&gl);
+
+        // Schedule ourself for another requestAnimationFrame callback.
+        request_animation_frame(render_loop.borrow().as_ref().unwrap());
+    }) as Box<dyn FnMut()>));
+
+    request_animation_frame(render_loop_2.borrow().as_ref().unwrap());
     Ok(())
 }
 

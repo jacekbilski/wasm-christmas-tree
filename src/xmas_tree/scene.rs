@@ -41,6 +41,12 @@ impl Scene {
         models
     }
 
+    pub fn next_frame(&mut self, gl: &GL) {
+        for d in &mut self.models {
+            d.next_frame(gl);
+        }
+    }
+
     pub fn draw(&mut self, gl: &GL) {
         gl.clear_color(0., 0., 0., 1.0);
         gl.clear(GL::COLOR_BUFFER_BIT | GL::DEPTH_BUFFER_BIT);
