@@ -173,7 +173,7 @@ impl Baubles {
 }
 
 impl Model for Baubles {
-    fn next_frame(&mut self) {
+    fn next_frame(&mut self, _gl: &GL) {
         // nothing changes
     }
 

@@ -26,7 +26,7 @@ impl Instance {
 
 pub trait Model {
     /// Do all necessary things to advance the model to the next frame
-    fn next_frame(&mut self);
+    fn next_frame(&mut self, gl: &GL);
 
     /// Draw the model using given shader
     fn draw(&mut self, gl: &GL, shader: &Shader);

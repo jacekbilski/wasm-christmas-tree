@@ -38,7 +38,7 @@ impl Ground {
 }
 
 impl Model for Ground {
-    fn next_frame(&mut self) {
+    fn next_frame(&mut self, _gl: &GL) {
         // nothing changes
     }
 
