@@ -42,7 +42,7 @@ impl Model for Ground {
         // nothing changes
     }
 
-    fn draw(&mut self, gl: &GL, shader: &Shader) {
+    fn draw(&self, gl: &GL, shader: &Shader) {
         self.mesh.draw_single(gl, shader);
     }
 }

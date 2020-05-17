@@ -48,13 +48,13 @@ impl Scene {
         }
     }
 
-    pub fn draw(&mut self, gl: &GL) {
+    pub fn draw(&self, gl: &GL) {
         gl.clear_color(0., 0., 0., 1.0);
         gl.clear(GL::COLOR_BUFFER_BIT | GL::DEPTH_BUFFER_BIT);
 
         gl.use_program(Some(&self.shader.program));
 
-        for d in &mut self.models {
+        for d in &self.models {
             d.draw(gl, &self.shader);
         }
     }

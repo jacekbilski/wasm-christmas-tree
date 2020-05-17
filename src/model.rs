@@ -29,5 +29,5 @@ pub trait Model {
     fn next_frame(&mut self, gl: &GL);
 
     /// Draw the model using given shader
-    fn draw(&mut self, gl: &GL, shader: &Shader);
+    fn draw(&self, gl: &GL, shader: &Shader);
 }

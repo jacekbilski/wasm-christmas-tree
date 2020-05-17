@@ -54,7 +54,7 @@ impl Model for Tree {
         // nothing changes
     }
 
-    fn draw(&mut self, gl: &GL, shader: &Shader) {
+    fn draw(&self, gl: &GL, shader: &Shader) {
         for mesh in &self.meshes {
             mesh.draw_single(gl, shader);
         }

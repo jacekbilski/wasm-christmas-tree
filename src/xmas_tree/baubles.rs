@@ -177,7 +177,7 @@ impl Model for Baubles {
         // nothing changes
     }
 
-    fn draw(&mut self, gl: &GL, shader: &Shader) {
+    fn draw(&self, gl: &GL, shader: &Shader) {
         self.mesh.draw_instances(gl, shader, self.baubles.len());
     }
 }

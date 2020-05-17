@@ -143,7 +143,7 @@ impl Model for Snow {
         self.mesh.fill_instances_vbo(gl, &instances);
     }
 
-    fn draw(&mut self, gl: &GL, shader: &Shader) {
+    fn draw(&self, gl: &GL, shader: &Shader) {
         self.mesh.draw_instances(gl, shader, MAX_SNOWFLAKES);
     }
 }

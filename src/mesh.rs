@@ -135,7 +135,7 @@ impl Mesh {
         gl.bind_vertex_array(None);
     }
 
-    pub fn draw_instances(&mut self, gl: &GL, shader: &Shader, num: usize) {
+    pub fn draw_instances(&self, gl: &GL, shader: &Shader, num: usize) {
         gl.use_program(Some(&shader.program));
         gl.bind_vertex_array(Some(&self.vao));
         gl.draw_elements_instanced_with_i32(GL::TRIANGLES, self.indices.len() as i32, GL::UNSIGNED_INT, 0, num as i32);

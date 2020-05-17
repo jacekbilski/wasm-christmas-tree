@@ -23,6 +23,13 @@ fn window() -> web_sys::Window {
     web_sys::window().expect("no global `window` exists")
 }
 
+fn get_canvas() -> HtmlCanvasElement {
+    let document = window().document().unwrap();
+    let canvas = document.get_element_by_id("canvas").unwrap();
+    let canvas: HtmlCanvasElement = canvas.dyn_into::<HtmlCanvasElement>().expect("Counldn't find canvas element");
+    canvas
+}
+
 fn request_animation_frame(f: &Closure<dyn FnMut()>) {
     window()
         .request_animation_frame(f.as_ref().unchecked_ref())
@@ -33,10 +40,7 @@ fn request_animation_frame(f: &Closure<dyn FnMut()>) {
 pub fn start() -> Result<(), JsValue> {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
 
-    let document = window().document().unwrap();
-    let canvas = document.get_element_by_id("canvas").unwrap();
-    let canvas: web_sys::HtmlCanvasElement = canvas.dyn_into::<web_sys::HtmlCanvasElement>().expect("Counldn't find canvas element");
-
+    let canvas = get_canvas();
     canvas.set_width(canvas.client_width() as u32);
     canvas.set_height(canvas.client_height() as u32);
 
