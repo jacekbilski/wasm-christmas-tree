@@ -6,7 +6,7 @@ use wasm_bindgen::__rt::core::cell::RefCell;
 use wasm_bindgen::__rt::std::rc::Rc;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
-use web_sys::WebGl2RenderingContext as GL;
+use web_sys::{HtmlCanvasElement, WebGl2RenderingContext as GL};
 
 use crate::xmas_tree::scene::Scene;
 
@@ -33,7 +33,14 @@ fn request_animation_frame(f: &Closure<dyn FnMut()>) {
 pub fn start() -> Result<(), JsValue> {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
 
-    let gl = get_context();
+    let document = window().document().unwrap();
+    let canvas = document.get_element_by_id("canvas").unwrap();
+    let canvas: web_sys::HtmlCanvasElement = canvas.dyn_into::<web_sys::HtmlCanvasElement>().expect("Counldn't find canvas element");
+
+    canvas.set_width(canvas.client_width() as u32);
+    canvas.set_height(canvas.client_height() as u32);
+
+    let gl = get_context(&canvas);
     gl.enable(GL::DEPTH_TEST);
 
     let mut scene = Scene::setup(&gl);
@@ -52,11 +59,7 @@ pub fn start() -> Result<(), JsValue> {
     Ok(())
 }
 
-fn get_context() -> GL {
-    let document = web_sys::window().unwrap().document().unwrap();
-    let canvas = document.get_element_by_id("canvas").unwrap();
-    let canvas: web_sys::HtmlCanvasElement = canvas.dyn_into::<web_sys::HtmlCanvasElement>().expect("Counldn't find canvas element");
-
+fn get_context(canvas: &HtmlCanvasElement) -> GL {
     canvas
         .get_context("webgl2")
         .expect("Error getting WebGL2 Rendering Context")
