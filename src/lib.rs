@@ -49,17 +49,32 @@ pub fn start() -> Result<(), JsValue> {
 
     let mut scene = Scene::setup(&gl);
 
-    let render_loop = Rc::new(RefCell::new(None));
-    let render_loop_2 = render_loop.clone();
-    *render_loop_2.borrow_mut() = Some(Closure::wrap(Box::new(move || {
-        scene.next_frame(&gl);
-        scene.draw(&gl);
+    {   // handling resizing the canvas
+        let gl = gl.clone();
+        let camera = scene.camera.clone();
+        let on_resize = Closure::wrap(Box::new(move || {
+            canvas.set_width(canvas.client_width() as u32);
+            canvas.set_height(canvas.client_height() as u32);
+            gl.viewport(0, 0, canvas.width() as i32, canvas.height() as i32);
+            camera.on_window_resize(&gl);
+        }) as Box<dyn Fn()>);
+        window().set_onresize(Some(on_resize.as_ref().unchecked_ref()));
+        on_resize.forget();
+    }
 
-        // Schedule ourself for another requestAnimationFrame callback.
-        request_animation_frame(render_loop.borrow().as_ref().unwrap());
-    }) as Box<dyn FnMut()>));
+    {   // render loop callback
+        let render_loop = Rc::new(RefCell::new(None));
+        let render_loop_2 = render_loop.clone();
+        *render_loop_2.borrow_mut() = Some(Closure::wrap(Box::new(move || {
+            scene.next_frame(&gl);
+            scene.draw(&gl);
 
-    request_animation_frame(render_loop_2.borrow().as_ref().unwrap());
+            // Schedule ourself for another requestAnimationFrame callback.
+            request_animation_frame(render_loop.borrow().as_ref().unwrap());
+        }) as Box<dyn FnMut()>));
+        request_animation_frame(render_loop_2.borrow().as_ref().unwrap());
+    }
+
     Ok(())
 }
 

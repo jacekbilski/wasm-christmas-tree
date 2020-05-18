@@ -5,19 +5,17 @@ use web_sys::{WebGl2RenderingContext as GL, WebGlBuffer};
 use crate::coords::SphericalPoint3;
 use crate::shader::CAMERA_UBO_BINDING_POINT;
 
+#[derive(Clone)]
 pub struct Camera {
     position: SphericalPoint3<f32>,
     look_at: Point3<f32>,
     ubo: WebGlBuffer,
-    window_width: f32,
-    window_height: f32,
 }
 
 impl Camera {
     pub fn new(gl: &GL, position: SphericalPoint3<f32>, look_at: Point3<f32>) -> Self {
-        let (window_width, window_height) = (gl.drawing_buffer_width(), gl.drawing_buffer_height());
         let ubo = Camera::setup_camera_ubo(&gl);
-        let camera = Camera { position, look_at, ubo, window_width: window_width as f32, window_height: window_height as f32 };
+        let camera = Camera { position, look_at, ubo };
         camera.update_uniforms(gl);
         camera
     }
@@ -34,6 +32,7 @@ impl Camera {
     }
 
     fn update_uniforms(&self, gl: &GL) {
+        let (window_width, window_height) = (gl.drawing_buffer_width() as f32, gl.drawing_buffer_height() as f32);
         gl.bind_buffer(GL::UNIFORM_BUFFER, Some(&self.ubo));
         let matrix_size = mem::size_of::<Matrix4<f32>>() as i32;
         let vector3_size = mem::size_of::<Vector4<f32>>() as i32; // there's no mistake, Vector3 takes the same amount of memory as Vector4
@@ -52,11 +51,15 @@ impl Camera {
         }
 
         unsafe {
-            let projection = perspective(Deg(45.0), self.window_width / self.window_height, 0.1, 100.0);
+            let projection = perspective(Deg(45.0), window_width / window_height, 0.1, 100.0);
             let projection_array: &[f32; 16] = projection.as_ref();
             let projection_js_array = js_sys::Float32Array::view(projection_array);
             gl.buffer_sub_data_with_i32_and_array_buffer_view(GL::UNIFORM_BUFFER, vector3_size + matrix_size, &projection_js_array);
         }
         gl.bind_buffer(GL::UNIFORM_BUFFER, None);
+    }
+
+    pub fn on_window_resize(&self, gl: &GL) {
+        self.update_uniforms(gl);
     }
 }
