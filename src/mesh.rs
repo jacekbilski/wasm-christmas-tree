@@ -27,7 +27,6 @@ impl Vertex {
 
 pub struct Mesh {
     indices: Vec<u32>,
-    max_instances: usize,
     vao: WebGlVertexArrayObject,
     instances_vbo: WebGlBuffer,
 }
@@ -36,7 +35,7 @@ impl Mesh {
     pub fn new(gl: &GL, vertices: Vec<Vertex>, indices: Vec<u32>, max_instances: usize) -> Self {
         let instances_vbo = Self::create_instances_vbo(gl, max_instances);
         let vao = Self::create_vao(gl, &vertices, &indices, &instances_vbo);
-        let mesh = Self { indices, max_instances, vao, instances_vbo };
+        let mesh = Self { indices, vao, instances_vbo };
         mesh
     }
 
