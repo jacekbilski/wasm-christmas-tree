@@ -1,12 +1,13 @@
 extern crate console_error_panic_hook;
 
+use core::f32::consts::PI;
 use std::panic;
 
 use wasm_bindgen::__rt::core::cell::RefCell;
 use wasm_bindgen::__rt::std::rc::Rc;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
-use web_sys::{HtmlCanvasElement, WebGl2RenderingContext as GL};
+use web_sys::{HtmlCanvasElement, MouseEvent, WebGl2RenderingContext as GL};
 
 use crate::xmas_tree::scene::Scene;
 
@@ -48,6 +49,21 @@ pub fn start() -> Result<(), JsValue> {
     gl.enable(GL::DEPTH_TEST);
 
     let mut scene = Scene::setup(&gl);
+
+    {   // handling mouse "dragging" - rotating the scene
+        let gl = gl.clone();
+        let mut camera = scene.camera.clone();
+        let canvas2 = canvas.clone();
+        let on_mouse_move = Closure::wrap(Box::new(move |event: MouseEvent| {
+            if event.buttons() == 1 {
+                let max = (canvas2.width() as f32).max(canvas2.height() as f32);
+                camera.rotate_horizontally(&gl, -2. * PI / max * event.movement_x() as f32);
+                camera.rotate_vertically(&gl, -2. * PI / max * event.movement_y() as f32);
+            }
+        }) as Box<dyn FnMut(_)>);
+        canvas.set_onmousemove(Some(on_mouse_move.as_ref().unchecked_ref()));
+        on_mouse_move.forget();
+    }
 
     {   // handling resizing the canvas
         let gl = gl.clone();

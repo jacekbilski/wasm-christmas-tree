@@ -62,4 +62,14 @@ impl Camera {
     pub fn on_window_resize(&self, gl: &GL) {
         self.update_uniforms(gl);
     }
+
+    pub fn rotate_horizontally(&mut self, gl: &GL, angle: f32) {
+        self.position.phi += angle;
+        self.update_uniforms(gl);
+    }
+
+    pub fn rotate_vertically(&mut self, gl: &GL, angle: f32) {
+        self.position.theta += angle;
+        self.update_uniforms(gl);
+    }
 }
