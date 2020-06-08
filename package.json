@@ -1,0 +1,25 @@
+{
+  "name": "wasm-xmas-tree",
+  "productName": "XMasTree",
+  "collaborators": [
+    "Jacek Bilski <jacek@bilski.tech>"
+  ],
+  "version": "0.1.0",
+  "description": "A Feature using WebAssembly (accidentally rendering an XMasTree using WebGL)",
+  "main": "build/final/feature.js",
+  "scripts": {
+    "stage1": "rollup -c rollup.config.js",
+    "stage2": "orodruin build",
+    "build": "npm run stage1 && npm run stage2"
+  },
+  "devDependencies": {
+    "@polypoly-eu/orodruin": "0.0.2",
+    "@wasm-tool/rollup-plugin-rust": "^1.0.3",
+    "rollup": "^2.15.0"
+  },
+  "polypoly": {
+    "build": true,
+    "inputStyle": "feature/feature.css",
+    "inputJS": "feature/feature.js"
+  }
+}
