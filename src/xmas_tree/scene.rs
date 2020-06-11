@@ -49,7 +49,7 @@ impl Scene {
     }
 
     pub fn draw(&self, gl: &GL) {
-        gl.clear_color(0., 0., 0., 1.0);
+        gl.clear_color(0.0157, 0., 0.3607, 1.0);
         gl.clear(GL::COLOR_BUFFER_BIT | GL::DEPTH_BUFFER_BIT);
 
         gl.use_program(Some(&self.shader.program));
