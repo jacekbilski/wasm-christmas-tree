@@ -47,6 +47,7 @@ pub fn start() -> Result<(), JsValue> {
 
     let gl = get_context(&canvas);
     gl.enable(GL::DEPTH_TEST);
+    gl.enable(GL::CULL_FACE);
 
     let mut scene = Scene::setup(&gl);
 
